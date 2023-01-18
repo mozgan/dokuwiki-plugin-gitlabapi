@@ -1,0 +1,6 @@
+base    gitlabapi
+author  mozgan
+email   mozgan@gmail.com
+date    2023-01-18
+name    GitLabApi
+desc    Display some information such as commits, issues etc. from a GitLab project.

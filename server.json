@@ -1,0 +1,10 @@
+{
+    "server_1": {
+        "url": "http://gitlab.domain.com",
+        "api_token": ""
+    },
+    "server_2": {
+        "url": "http://gitlab.anotherdomain.com",
+        "api_token": ""
+    }
+}
