@@ -24,8 +24,8 @@ The following values must be configured in the Configuration Manager:
 <gitlab-api project-path="<NAMESPACE>/<SUB_DIRS>/<PROJECT_NAME>" />
 ```
 
-- **NAMESPACE** is the namespace of your peoject.
-- **SUB_DIRS** is the sub-directories of your project.
+- **NAMESPACE** is the namespace of your project.
+- **SUB_DIRS** is the sub-directories of your project if exists.
 - **PROJECT_NAME** is the name of your project.
 
 For instance, if your project is available at `http://gitlab.domain.com/ns/dir1/dir2/project`, then the syntax should be:
@@ -38,10 +38,10 @@ For instance, if your project is available at `http://gitlab.domain.com/ns/dir1/
 
 The plugin displays following information if you add corresponded parameter:
 
-- **milestones="n"** shows the latest $n$ milestones.
-- **commits="n"** shows the latest $n$ commits.
-- **issues="n"** shows the latest $n$ issues.
-- **pipelines="n"** shows the latest $n$ pipelines.
+- **milestones="n"** lists the latest $n$ milestones.
+- **commits="n"** lists the latest $n$ commits.
+- **issues="n"** lists the latest $n$ issues.
+- **pipelines="n"** lists the latest $n$ pipelines.
 
 For instance, if you want to see the latest 3 milestones, 10 commits, 5 issues, and 10 pipelines, then the syntax will be:
 
@@ -67,6 +67,9 @@ For instance; you have a GitLab server namely `gitlab.home` and following JSON f
 Then you can add `server` parameter as follows:
 
 ```php
-<gitlab-api server="second" project-path="ns/project" />
+<gitlab-api server="gitlab.home" project-path="ns/project" />
 ```
 
+## Thanks
+
+This plugis is an extended version of [Gitlab-Project](https://github.com/algorys/gitlabproject/). Thanks to [@algorys](https://github.com/algorys). 
