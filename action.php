@@ -12,7 +12,7 @@ class action_plugin_gitlabapi extends DokuWiki_Action_Plugin {
             'type' => 'format',
             'title' => $this->getLang('button'),
             'icon' => '../../plugins/gitlabapi/images/gitlab.png',
-            'open' => '<gitlab-api project-path="<NAMESPACE>/<PROJECT_NAME>">',
+            'open' => '<gitlab-api project-path="<NAMESPACE>/<PROJECT_NAME>" milestones="1" issues="3" commits="5" pipelines="1"',
             'close' => ' />',
         );
     }
