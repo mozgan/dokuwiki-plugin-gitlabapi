@@ -1,12 +1,20 @@
 <?php
 
 class GitLabApi {
-    const version = '0.0.1';
+    const version = '0.1.0';
 
     public $client;
     public $data;
 
     function __construct($dw_data) {
+        if ($dw_data['server'] == null) {
+            echo "GitLabApi: ERROR - NO SERVER DEFINED!";
+            die();
+        }
+        if($dw_data['token'] == null) {
+            echo "GitLabApi: ERROR - NO TOKEN GIVEN!";
+            die();
+        }
         $this->dw_data = $dw_data;
         $this->client = curl_init();
     }
@@ -25,9 +33,7 @@ class GitLabApi {
         curl_setopt($this->client, CURLOPT_RETURNTRANSFER, true);
 
         $answer = curl_exec($this->client);
-        $answer_decoded = json_decode($answer, true);
-
-        return $answer_decoded;
+        return json_decode($answer, true);
     }
 
     function getProject() {
@@ -35,34 +41,36 @@ class GitLabApi {
         $url_request = $this->getAPIUrl().'search?scope=projects&search='.$project_name;
         $project = $this->gitlabRequest($url_request);
 
+        if (array_key_exists('message', $project)) {
+            echo "ERROR: ", $project['message'];
+            return;
+        }
+
         foreach ($project as $p) {
-            if ($p['path_with_namespace'] == $this->dw_data['project-path'])
+            if ($p['path_with_namespace'] == $this->dw_data['project-path']) {
                 return $p;
+            }
         }
     }
 
     function getCommits($id) {
         $url_request = $this->getAPIUrl().'projects/'.$id.'/repository/commits';
-        $commits = $this->gitlabRequest($url_request);
-        return $commits;
+        return $this->gitlabRequest($url_request);
     }
 
     function getIssues($id) {
         $url_request = $this->getAPIUrl().'projects/'.$id.'/issues';
-        $issues = $this->gitlabRequest($url_request);
-        return $issues;
+        return $this->gitlabRequest($url_request);
     }
 
     function getMilestones($id) {
         $url_request = $this->getAPIUrl().'projects/'.$id.'/milestones';
-        $milestones = $this->gitlabRequest($url_request);
-        return $milestones;
+        return $this->gitlabRequest($url_request);
     }
 
     function getPipelines($id) {
         $url_request = $this->getAPIUrl().'projects/'.$id.'/pipelines';
-        $pipelines = $this->gitlabRequest($url_request);
-        return $pipelines;
+        return $this->gitlabRequest($url_request);
     }
 }
 

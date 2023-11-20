@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) { die(); }
 
 class action_plugin_gitlabapi extends DokuWiki_Action_Plugin {
     function register(Doku_Event_Handler $controller) {

@@ -6,9 +6,9 @@
  * @author  : Mehmet Ozgan <mozgan@gmail.com>
  */
 
-if (!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) { die(); }
 
-require __DIR__.'/gitlab/gitlabapi.php';
+require_once __DIR__.'/gitlab/gitlabapi.php';
 
 class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
     /**
@@ -37,10 +37,11 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
     function getServerFromJson($server) {
         $json_file = file_get_contents(__DIR__.'/server.json');
         $json_data = json_decode($json_file, true);
-        if (isset($json_data[$server]))
+        if (isset($json_data[$server])) {
             return $json_data[$server];
-        else
+        } else {
             return null;
+        }
     }
 
 
@@ -53,38 +54,51 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
 
                 // match @server and @token
                 preg_match("/server *= *(['\"])(.*?)\\1/", $match, $server);
-                if (count($server) != 0) {
+                //if (count($server) != 0) {
+                if (!empty($server)) {
                     $server_data = $this->getServerFromJson($server[2]);
                     if (!is_null($server_data)) {
                         $data['server'] = $server_data['url'];
                         $data['token'] = $server_data['api_token'];
                     }
                 }
-                if (!isset($data['server']))
+                if (!isset($data['server'])) {
                     $data['server'] = $this->getConf('server.default');
-                if (!isset($data['token']))
+                } 
+
+                if (!isset($data['token'])) {
                     $data['token'] = $this->getConf('token.default');
+                }
 
                 // match @project-path
                 preg_match("/project-path *= *(['\"])(.*?)\\1/", $match, $project_path);
-                if (count($project_path) != 0)
+                if (!empty($project_path)) {
                     $data['project-path'] = $project_path[2];
+                }
 
                 // match @milestones
                 preg_match("/milestones *= *(['\"])(.*?)\\1/", $match, $milestones);
-                $data['milestones'] = $milestones[2];
+                if(!empty($milestone)) {
+                    $data['milestones'] = $milestones[2];
+                }
 
                 // match @commits
                 preg_match("/commits *= *(['\"])(.*?)\\1/", $match, $commits);
-                $data['commits'] = $commits[2];
+                if(!empty($commits)) {
+                    $data['commits'] = $commits[2];
+                }
 
                 // match @issues
                 preg_match("/issues *= *(['\"])(.*?)\\1/", $match, $issues);
-                $data['issues'] = $issues[2];
+                if(!empty($issues)) {
+                    $data['issues'] = $issues[2];
+                }
 
                 // match @pipelines
                 preg_match("/pipelines *= *(['\"])(.*?)\\1/", $match, $pipelines);
-                $data['pipelines'] = $pipelines[2];
+                if(!empty($pipelines)) {
+                    $data['pipelines'] = $pipelines[2];
+                }
 
                 return $data;
 
@@ -97,10 +111,10 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
     }
 
     function render($mode, Doku_Renderer $renderer, $data) {
-        if ($mode !== 'xhtml') return false;
-        if ($mode != 'xhtml') return false;
+        if ($mode !== 'xhtml') { return false; }
+        if ($mode != 'xhtml') { return false; }
 
-        if ($data['error']) {
+        if (isset($data['error'])) {
             $renderer->doc .= $data['text'];
             return true;
         }
@@ -151,14 +165,18 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
         $renderer->doc .= ' - <b>Namespace:</b> <a href="'.$data['server'].'/'.$namespace.'"> '.$namespace.'</a>';
         $renderer->doc .= '<p><b>'.$this->getLang('gitlab.activity').':</b> '.$date_time['date'].' - '.$date_time['time'].'</p>';
 
-        if ($data['milestones'])
+        if (!empty($data['milestones'])) {
             $this->renderProjectMilestones($renderer, $gitlab, $project_id, $data['milestones']);
-        if ($data['commits'])
+        }
+        if (!empty($data['commits'])) {
             $this->renderProjectCommits($renderer, $gitlab, $project_id, $data['commits']);
-        if ($data['issues'])
+        }
+        if (!empty($data['issues'])) {
             $this->renderProjectIssues($renderer, $gitlab, $project_id, $data['issues']);
-        if ($data['pipelines'])
+        }
+        if (!empty($data['pipelines'])) {
             $this->renderProjectPipelines($renderer, $gitlab, $project_id, $data['pipelines']);
+        }
 
         $renderer->doc .= '</p>';
         $renderer->doc .= '</div>';
@@ -214,18 +232,23 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
 
         $total = count($issues) < $number ? count($issues) : $number;
         for ($i = 0; $i < $total; $i++) {
+            if ($issues[$i]['state'] == 'closed') {
+                continue;
+            }
             $renderer->doc .= '<tr>';
             $renderer->doc .= '<td>'.$issues[$i]['author']['name'].'</td>';
             $renderer->doc .= '<td>'.$issues[$i]['title'].'</td>';
             $labels = $issues[$i]['labels'];
             $l_list = '';
-            foreach ($labels as $l)
+            foreach ($labels as $l) {
                 $l_list .= $l.', ';
+            }
             $renderer->doc .= '<td>'.rtrim($l_list,', ').'</td>';
             $assignees = $issues[$i]['assignees'];
             $a_list = '';
-            foreach ($assignees as $a)
+            foreach ($assignees as $a) {
                 $a_list .= $a['name'].', ';
+            }
             $renderer->doc .= '<td>'.rtrim($a_list, ', ').'</td>';
             $renderer->doc .= '<td>'.$issues[$i]['state'].'</td>';
             $renderer->doc .= '<td><a href='.$issues[$i]['web_url'].'>Issue link</a></td>';
