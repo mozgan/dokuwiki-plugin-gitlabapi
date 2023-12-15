@@ -54,7 +54,6 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
 
                 // match @server and @token
                 preg_match("/server *= *(['\"])(.*?)\\1/", $match, $server);
-                //if (count($server) != 0) {
                 if (!empty($server)) {
                     $server_data = $this->getServerFromJson($server[2]);
                     if (!is_null($server_data)) {
@@ -64,7 +63,7 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
                 }
                 if (!isset($data['server'])) {
                     $data['server'] = $this->getConf('server.default');
-                } 
+                }
 
                 if (!isset($data['token'])) {
                     $data['token'] = $this->getConf('token.default');
@@ -78,7 +77,7 @@ class syntax_plugin_gitlabapi extends DokuWiki_Syntax_Plugin {
 
                 // match @milestones
                 preg_match("/milestones *= *(['\"])(.*?)\\1/", $match, $milestones);
-                if(!empty($milestone)) {
+                if(!empty($milestones)) {
                     $data['milestones'] = $milestones[2];
                 }
 

@@ -8,5 +8,5 @@ $lang['gitlab.commits']        = 'Commits';
 $lang['gitlab.issues']         = 'Issues';
 $lang['gitlab.milestones']     = 'Milestones';
 $lang['gitlab.pipelines']      = 'Pipelines';
-$lang['gitlab.error']          = '<span style="color: red;">GitLabApi can\'t find your project!</span> Please check your <b>namespace</b> and your <b>project name</b>. Make sure you set up the right server and the right token!';
+$lang['gitlab.error']          = '<span style="color: red;">GitLabApi cannot find your project!</span> Please check your <b>namespace</b> and your <b>project name</b>. Make sure you set up the right server and the right token!';
 

@@ -1,7 +1,7 @@
 <?php
 
 class GitLabApi {
-    const version = '0.1.0';
+    const version = '0.1.1';
 
     public $client;
     public $data;
@@ -29,28 +29,27 @@ class GitLabApi {
             'PRIVATE-TOKEN: '.$this->dw_data['token']
         ));
         curl_setopt($this->client, CURLOPT_SSL_VERIFYHOST, '1');
-        curl_setopt($this->client, CURLOPT_SSL_VERIFYPEER, '0');
+        curl_setopt($this->client, CURLOPT_SSL_VERIFYPEER, '1');
         curl_setopt($this->client, CURLOPT_RETURNTRANSFER, true);
+        header('Content-Type: application/json');
 
         $answer = curl_exec($this->client);
         return json_decode($answer, true);
     }
 
     function getProject() {
-        $project_name = basename($this->dw_data['project-path']);
-        $url_request = $this->getAPIUrl().'search?scope=projects&search='.$project_name;
+        $project_name = str_replace("/", "%2F", $this->dw_data['project-path']);
+        $url_request = $this->getAPIUrl().'projects/'.$project_name;
         $project = $this->gitlabRequest($url_request);
+
+        if(empty($project)) { return; }
 
         if (array_key_exists('message', $project)) {
             echo "ERROR: ", $project['message'];
             return;
         }
 
-        foreach ($project as $p) {
-            if ($p['path_with_namespace'] == $this->dw_data['project-path']) {
-                return $p;
-            }
-        }
+        return $project;
     }
 
     function getCommits($id) {
